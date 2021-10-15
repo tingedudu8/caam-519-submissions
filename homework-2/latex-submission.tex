@@ -1,0 +1,63 @@
+\documentclass{article}
+\usepackage{fancyvrb}
+\usepackage{bera}
+\usepackage[svgnames]{xcolor}
+\usepackage{listings}
+\usepackage{caption}
+
+\title{CAAM 519, Homework \#2: \LaTeX\ Submission}
+\author{\texttt{tw45}}
+\date{September 30, 2021}
+
+\begin{document}
+
+\maketitle
+
+\section{Communicating with remote machines via ssh}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+1. the ssh command you used to log into the clear machine,
+2. the message that the clear machine provided upon logging in, and
+3. the output of the following shell commands: \textbf{\colorbox{Gainsboro}{echo \$HOSTNAME}} .
+4. Also command you use to change your shell prompt text to \textbf{\colorbox{Gainsboro}{>}} In my Ubuntu running
+   in VirtualBox, by default it says something like \textbf{\colorbox{Gainsboro}{mo@sarraf-VirtualBox:\$}}.
+\end{Verbatim}
+
+\section{A script to build a latex document while hiding auxiliary files}
+
+\begin{lstlisting}[language=bash,caption={lstlisting of bash code "clean-build.sh"}]
+#!/bin/bash
+echo "Please enter your proj name: "
+read proj
+file_name="$proj.tex"
+touch "$file_name"
+path=".build"
+if [ -d "$path" ]
+then
+echo "Directory exists"
+else
+echo "No dir, creating..."
+mkdir .build
+fi
+cat >"$file_name"<<'THEEND'
+\documentclass{article}
+\begin{document}
+hello world
+\end{document}
+THEEND
+pdflatex "$file_name"
+mv "$proj.aux" "$proj.tex" "$proj.log" .build
+\end{lstlisting}
+first, we ask the user to input a project name and we append ".tex" to the end of the project name and store it in a variable called "file\_name". But if the user mistakenly put the postfix in the filename, there will be a problem. Then we create the .tex file. If folder ".build" exists, we print "Directory exists", otherwise, we print "No dir, creating" and creates the folder ".build". Then we write the following lines to project.tex:\\
+\textbackslash documentclass\{article\}\\
+\textbackslash begin\{document\}\\
+hello world\\
+\textbackslash end\{document\}\\
+Just to create a simple .tex file. In the end, we use pdflatex to compile the .tex file and move all the auxiliary build files to .build folder.\\
+
+\begin{enumerate}
+    \item if the user enters nothing for the question "please enter your proj name: ", the program will have trouble creating compiling the .tex file and no .aux .pdf .log file will be generated.
+    \item if the user want to create a hidden file and for example entered ".project" for the question "please enter your proj name: ", the program will also have trouble creating compiling the .tex file and no .aux .pdf .log file will be generated.
+\end{enumerate}
+
+\end{document}
