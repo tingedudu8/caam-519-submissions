@@ -1,0 +1,5 @@
+clean-build.sh LGTM;
+linecount.sh LGTM;
+Poetry_table.sh LGTM;
+latex-submission.tex LGTM;
+total: 90/90
